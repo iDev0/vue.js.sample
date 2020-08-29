@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
+    <body>
+        <div id='app'>
+            {{ message }}
+            <button v-on:click='changeMessage'>메시지변경</button>
+        </div>
+    </body>
+    <script>
+        var app = new Vue({
+            el : '#app',
+            data : {
+                message : 'life cycle'
+            },
+            methods : {
+                changeMessage : function () {
+                    this.message = 'change message'
+                }
+            }, 
+            beforeCreate : function () {
+                console.log('life cycle : 1')
+            },
+            created : function () {
+                console.log('life cycle : 2')
+            },
+            beforeMount : function () {
+                console.log('life cycle : 3')
+            },        
+            mounted : function () {
+                console.log('life cycle : 4')
+            },
+            beforeUpdate : function () {
+                // 데이터가 변경되는 경우 발생
+                // 해당 함수가 실행되고, 가상 dom 이 재 랜더링된다.
+                console.log('life cycle : 5')
+            },
+            updated : function () {
+                // 가상 dom 재 랜더링된 후 실행된다.
+                console.log('life cycle : 6')
+            },
+            beforeDestroy : function () {
+                // 가상 dom 이 파괴된 경우 실행된다.
+                // 해당 함수가 실행되고 모든 하위의 자식 컴포넌트 제거된다.                
+                console.log('life cycle : 7')
+            },
+            destroyed : function () {
+                console.log('life cycle : 8')
+            }
+        })
+
+        // 인스턴스 생성시 el 옵션이 없을 경우 아래의 메소드를 실행한다.
+        // 재 호출 시 beforeMount, mounted 가 재 실행된다.
+        // 라이프 사이클
+        console.log('========== re mount element ========== ')
+        app.$mount('#app')
+        console.log('========== re mount element ========== ')
+
+
+        // 인스턴스 생성시 template 있는 경우 
+        // render 옵션을 통해 동작한다.
+        
+        // 인스턴스 삭제
+        // app.$destroy()
+        
+        
+
+
+    </script>
+</html>
