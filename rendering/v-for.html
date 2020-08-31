@@ -66,6 +66,7 @@
                     v-for="item in items"
                     v-bind:item='item'
                     v-bind:message='item.message'
+                    v-bind:id='item.id'
                     v-bind:key='item.id'
                 ></custom-component>
             </ul>
@@ -188,8 +189,8 @@
         // v-for 와 컴포넌트
         // ============================================================
         Vue.component('custom-component', {
-            template : '<li>{{message}}</li>',
-            props : ['message']
+            template : '<li>{{id}} - {{message}}</li>',
+            props : ['message', 'id']
         })
 
         var example6 = new Vue({
