@@ -1,0 +1,151 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
+    </head>
+    <body>
+        <div id='example'>
+            <h1 v-if='awesome'>Vue is awesome!!</h1>
+            <h1 v-else>else 조건!</h1>
+        </div>        
+        <hr>
+        <div id='example2'>
+            <template v-if='ok'>
+                <h1>title</h1>
+                <p>p1</p>
+                <p>p2</p>
+            </template>
+
+            <template v-else>
+                <h2>title2</h2>
+                <p>p1</p>                
+            </template>
+        </div>             
+        <hr>
+        <div id='example3'>
+            <div v-if="type === 'A'">
+                A
+              </div>
+              <div v-else-if="type === 'B'">
+                B
+              </div>
+              <div v-else-if="type === 'C'">
+                C
+              </div>
+              <div v-else>
+                Not A/B/C
+              </div>
+        </div>             
+        <hr>
+        <div id='example4'>
+            <template v-if="loginType === 'username'">
+                <label>사용자 이름</label>
+                <input placeholder="사용자 이름을 입력하세요">
+            </template>
+            <template v-else>
+                <label>이메일</label>
+                <input placeholder="이메일 주소를 입력하세요">
+            </template>         
+            <button v-on:click='changeType'>유형변경</button>   
+        </div>
+        <hr>
+        <div id='example5'>
+            <template v-if="loginType === 'username'">
+                <label>사용자 이름</label>
+                <input placeholder="사용자 이름을 입력하세요" key='username-input'>
+            </template>
+            <template v-else>
+                <label>이메일</label>
+                <input placeholder="이메일 주소를 입력하세요" key='email-input'>
+            </template>         
+            <button v-on:click='changeType'>유형변경</button>   
+        </div>
+        <hr>
+        <div id='example6'>
+            <h1 v-show='ok'>HELLO!</h1>      
+            <button v-on:click='changeDisplay'>{{message}}</button>   
+        </div>        
+
+    </body>
+    <script>
+
+        // ======================================================
+        // 기본 v-if 와 v-else
+        // v-else 엘리먼트는 v-if 엘리먼트 또는 v-else-if 엘리먼트 바로 뒤에 있어야 합니다. 
+        // 그렇지 않으면 인식할 수 없습니다.
+        // ======================================================
+        var example = new Vue({
+            el : '#example',
+            data : {
+                awesome : false,               
+            }            
+        })
+
+        // ======================================================
+        // v-if with template tag
+        // ======================================================        
+        var example2 = new Vue({
+            el : '#example2',
+            data : {
+                ok : false
+            }
+        })
+
+        // =============================================================================
+        // v-else-if (2.1.0 버전부터)
+        // =============================================================================
+        var example3 = new Vue({
+            el : '#example3',
+            data : {
+                type : 'A'
+            }
+        })
+
+        // =====================================================================================
+        // key 이용한 엘리먼트 제어
+        // example4 : key 엘리먼트를 사용하지 않으면 유형이 변경되어도 input 안의 내용이 그대로 유지됨 (재사용됨)
+        // example5 : key 엘리먼트를 사용하면 유형이 변경되면 input 안의 내용도 초기화됨
+        // =====================================================================================
+        var example4 = new Vue({
+            el : '#example4',
+            data : {
+                loginType : 'username'
+            },
+            methods : {
+                changeType : function () {
+                    this.loginType = this.loginType === 'username' ? 'useremail' : 'username'
+                }
+            }
+        })
+
+        var example5 = new Vue({
+            el : '#example5',
+            data : {
+                loginType : 'username'
+            },
+            methods : {
+                changeType : function () {
+                    this.loginType = this.loginType === 'username' ? 'useremail' : 'username'
+                }
+            }
+        })        
+
+        // =============================================================================
+        // v-show (display css 속성 토글)
+        // =============================================================================
+        var example5 = new Vue({
+            el : '#example6',
+            data : {
+                ok : true,
+                message : '안보이게'
+            },
+            methods : {
+                changeDisplay : function () {
+                    this.ok = !this.ok
+                    this.message = !this.ok ? '보이게' : '안보이게'
+                }
+            }
+        })        
+    </script>
+</html>
