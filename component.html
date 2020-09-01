@@ -25,6 +25,14 @@
                 <todo-item v-bind="todo"></todo-item>
             </div>
         </div>
+        <div id="counter-event-example">
+            <p>{{ total }}</p>
+            <button-counter v-on:increment="incrementTotal"></button-counter>
+            <button-counter v-on:increment="incrementTotal"></button-counter>
+        </div>
+        <div id="example4">
+            <currency-input v-model="price"></currency-input>
+        </div>
     </body>
 
     <script>
@@ -165,9 +173,74 @@
             }
         })
 
+        Vue.component('button-counter', {
+          template : '<button v-on:click="incrementCounter">{{ counter }}</button>',
+          data : function () {
+            return { counter : 0 }
+          },
+          methods : {
+            incrementCounter : function () {
+              this.counter += 1
+              this.$emit('increment')
+            }
+          }
+        })
+
+        new Vue({
+          el : '#counter-event-example',
+          data : {
+            total : 0
+          },
+          methods : {
+            incrementTotal : function () {
+              this.total += 1
+            }
+          }
+        })
+
+        // 사용자 정의 이벤트를 사용하여 폼 입력 컴포넌트 생성
+        // 사용자 정의 이벤트는 'v-model' 에서 작동하는 사용자 정의 입력을 만들수 있다.
+        Vue.component('currency-input', {
+          template : '\
+          <span>\
+          $\
+          <input ref="input" v-bind:value="value" v-on:input="updateValue($event.target.value)">\
+          </span>\
+          ',
+          props : ['value'],
+          methods : {
+            updateValue : function (value) {
+                var formattedValue = value
+                    .trim()
+                    .slice(0,
+                        value.indexOf('.') === -1
+                            ? value.length
+                            : value.indexOf('.') + 3)
+
+                if (formattedValue !== value) {
+                  this.$refs.input.value = formattedValue
+                }
+
+                this.$emit('input', Number(formattedValue))
 
 
-        
+            }
+
+          }
+        })
+
+        new Vue({
+          el : '#example4',
+          data : {
+            price : 0
+          }
+        })
+
+        // slot
+        // slot-scope
+        // template
+        // <component>, is
+        // keep-alive
 
 
 
