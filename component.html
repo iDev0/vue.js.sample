@@ -7,6 +7,24 @@
             <my-component></my-component>
             <local-component></local-component>
         </div>
+        <div id="example2">
+            <simple-counter></simple-counter>
+            <simple-counter></simple-counter>
+            <simple-counter></simple-counter>
+        </div>
+        <div id="example3">
+            <child message="안녕하세요"></child>
+            <br>
+            <div>
+                <input v-model="parentMsg">
+                <br>
+                <child2 :my-message="parentMsg"></child2>
+            </div>
+            <br>
+            <div>
+                <todo-item v-bind="todo"></todo-item>
+            </div>
+        </div>
     </body>
 
     <script>
@@ -42,6 +60,111 @@
                 'local-component' : localTemplate
             }
         })
+
+
+        // DOM 템플릿 구문 분석 경고
+        // DOM 을 템플릿으로 사용할 때 일부 엘리먼트는 제한이 있다.
+        // "<ul>", "<ol>", "<table>", "<select>" 
+        // 같은 일부 엘리먼트는 그 안에 어떤 엘리먼트가 나타날 수 있는지에 대한
+        // 제한을 가지고 있다.
+        // 이러한 엘리먼트는 사용자 지정 컴포넌트 사용시 렌더링 에러가 발생한다.
+        // 이런 경우 'is' 특수 속성을 사용하여 해결한다.
+        // <table>
+        //  <!-- bad(error!) -->
+        //  <my-row></my-row>
+        // 
+        //  <!-- good --> 
+        //  <tr is="my-row"></tr>
+        // </table> 
+        
+
+        // === 컴포넌트 생성시 'data' 속성은 반드시 함수여야 한다. === 
+        Vue.component('simple-counter', {
+            template : '<button v-on:click="counter += 1">{{ counter }}</button>',
+            data : function () {
+                return {
+                    counter : 0
+                }
+            }
+        })
+        
+        new Vue({
+            el : '#example2',
+        })
+
+        // ======= Props ==========
+        
+        /**
+         * Props 로 데이터 전달하기
+         * 모든 컴포넌트 인스턴스에는 자체 격리된 범위가 있다.
+         * 즉 하위 컴포넌트는 상위 데이터를 직접 참조 불가하다.
+         * 데이터는 props 옵션을 사용하여 하위 컴포넌트로 전달 할 수 있다.
+         * 
+         * 
+         * Props 를 camelCase 로 선언한경우 엘리먼트는 kebab-case 로 작성해야한다.
+         * <myDiv></myDiv> -> X
+         * <my-div></my-div> -> O 
+         * 
+         * 동적 Props
+         * 'v-bind' 를 사용하여 부모의 데이터에 props 를 동적으로 바인딩 할 수 있다.
+         * 데이터가 상위에서 업데이트 될 때마다 하위 데이터로도 전달됨
+         * 
+         * 리터럴 vs 동적
+         * 숫자 전달을 하기위해선 prop 접근이 아닌 v-bind 로 접근하여 넘겨주자
+         * 
+         * Props 검증
+         * 컴포넌트는 prop 에 대한 타입 체크 기능이 있다. 
+         * String, Number, Boolean, Function, Object, Array, Symbol
+         * 
+         * 
+        */
+        Vue.component('child', {
+            props : ['message'],
+            template : '<span>{{ message }}</span>'
+        })
+
+        // props 를 camelCase 로 선언한경우
+        // tag 작성시에는 kebab-case 로 작성해야한다.
+        Vue.component('child2', {
+            props : ['myMessage'],
+            template : '<span>{{ myMessage }}</span>'
+        })
+
+        // 객체 전달도 가능하다.
+        Vue.component('todo-item', {
+            props : ['text', 'isComplete'],
+            template : '<div>{{text}} - {{ isComplete }}</div>'
+        })
+
+        // Props 검증 예
+        Vue.component('check-props', {
+            props : {
+                text : String,
+                vaildation : {
+                    type : Function,
+                    default : function () {
+                        // 함수...
+                    }
+                },
+                seq : {
+                    type : Number,
+                    default : 0,
+                    required : true
+                }
+            }
+        })
+
+        new Vue({
+            el : '#example3',
+            data : {
+                parentMsg : '',
+                todo : {
+                    text : 'vue is awesome!',
+                    isComplete : true
+                }
+            }
+        })
+
 
 
         
