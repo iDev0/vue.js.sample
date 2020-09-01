@@ -16,7 +16,86 @@
         <div id="example3">
             <input type="checkbox" id="checkbox" v-model="checked">
             <label for="checkbox">{{ checked }}</label>
+            <br>
+
+            <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+            <label for="jack">Jack</label>
+            <input type="checkbox" id="john" value="John" v-model="checkedNames">
+            <label for="john">John</label>
+            <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+            <label for="mike">Mike</label>
+            <br>
+            <span>체크한 이름 : {{ checkedNames }}</span>
+
         </div>
+
+        <div id="example4">
+            <input type="radio" id="one" value="One" v-model="picked">
+            <label for="one">One</label>
+            <br>
+            <input type="radio" id="two" value="Two" v-model="picked">
+            <label for="two">Two</label>
+            <br>
+            <span>선택: {{ picked }}</span>
+        </div>
+
+        <div id="example5">
+            <select v-model="selected">
+                <option disabled value="">Please select one</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+              </select>
+              <span>선택함: {{ selected }}</span>
+
+              <select v-model="multiSelect" multiple>
+                <option disabled value="">Please select one</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+              </select>
+              <span>선택함: {{ multiSelect }}</span>
+        </div>
+        <hr>
+        <div id="example6">
+            <span>동적 Select 할당</span>
+            <select v-model="selected">
+                <option v-for="option in options" v-bind:value="option.value">
+                    {{option.text}}
+                </option>
+            </select>
+            <span>선택함 : {{ selected }}</span>
+        </div>
+        <hr>
+        <div id="example7">
+            <input type="checkbox" v-model="toggle" true-value="yes" false-value="no">
+            <span>선택함 : {{ toggle }}</span>
+            <br>
+            <input type="radio" v-model="pick" v-bind:value="a">
+            <span>radio selected : {{ pick }}</span>
+            <br>
+            <select v-model="selected">
+                <!-- option value 가 object 형태로 들어간다. -->
+                <option v-bind:value="{number : 123}">123</option>
+            </select>
+        </div>
+        <hr>
+        <div id="example8">
+            <input v-model="message">
+            <span>message : {{ message }}</span>
+            <br>
+            <input v-model.lazy="lazyMessage">
+            <span>lazy message : {{ lazyMessage }}</span>
+            <br>
+            <input v-model.number="age">
+            <span>my age : {{ age }}</span>
+            <br>
+            <input v-model.trim="trimMessage">
+            <span>trim message : {{ trimMessage }}</span>
+            <br>            
+        </div>
+        
+
     </body>
     <script>
 
@@ -40,13 +119,94 @@
             }
         })
 
+        // ==============================
+        // checkbox
+        // ==============================
         var example3 = new Vue({
             el : '#example3',
             data : {
-                checked : false 
+                checked : false,
+                checkedNames : []
+            }
+        })
+
+        // ==============================
+        // radio
+        // ==============================
+        var example4 = new Vue({
+            el : '#example4',
+            data : {
+                picked : ''
             }
         })
         
+        // ==============================
+        // select
+        // ==============================        
+        var example5 = new Vue({
+            el : '#example5',
+            data : {
+                selected : '',
+                multiSelect : []
+            }
+        })
+
+        // ==============================
+        // v-for 를 이용한 동적 select bind
+        // ==============================       
+        var example6 = new Vue({
+            el : '#example6',
+            data : {
+                selected : 'A',
+                options : [
+                    { text : 'One', value : 'A' },
+                    { text : 'Two', value : 'B' },
+                    { text : 'Three', value : 'C' }
+                ]
+            }
+        })
+
+
+        // ========== 값 바인딩 하기 ===========
+
+        
+        // ==========================================
+        // radio, checkbox, select 의 옵션 경우
+        // 'v-model' 바인값은 보통 문자열 또는 boolean
+        // 그러나 v-bind 를 사용하면 다른 값도 바인딩 가능
+        // ==========================================
+        var example7 = new Vue({
+            el : '#example7',
+            data : {
+                toggle : '',
+                pick : ''
+            }
+        })
+
+
+        // ========== v-model 의 수식어 ===========
+
+        // ======================================================================
+        // .lazy
+        // 기본적으로 "v-model" 은 각 입력 이벤트 후 입력과 데이터를 동기화한다.
+        // .lazy 수식어를 추가하면 이벤트가 끝나고 동작할 수 있도록 조정이 가능하다.
+        //
+        // .number
+        // 사용자 입력이 자동으로 숫자로 형변환 되는것을 지원한다.
+        //
+        // .trim
+        // input 이 자동으로 trim 처리를 한다.
+        // ======================================================================
+        var example8 = new Vue({
+            el : '#example8',
+            data : {
+                message : '',
+                lazyMessage : '',
+                age : 0,
+                trimMessage : ''
+            }
+        })
+
 
     </script>
 </html>
