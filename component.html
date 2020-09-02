@@ -57,6 +57,20 @@
                     <p slot='footer'>연락처 정보</p>
                 </app-layout>
             </div>
+            <div class="parent">
+                <child>
+                    <template slot-scope="props">
+                        <span>hello vue.js</span>
+                        <span>{{ props.text }}</span>
+                    </template>
+                </child>
+            </div>
+        </div>
+        <div id="example6">
+            <component :is="currentView"></component>
+            <keep-alive>
+                <component :is="currentView"></component>
+            </keep-alive>
         </div>
     </body>
 
@@ -290,17 +304,62 @@
             `
         })
 
+
+        // =====================================================
+        // slot-scope
+        // =====================================================
+        // 범위를 가지는 slot [ >= 2.1.0 ]
+        // 범위가 지정된 슬롯은 이미 렌더링 된 엘리먼트 대신 재 사용가능한 템플릿 으로 작동하는 특별한 유형의 슬롯입니다.
+        // prop 을 컴포넌트에게 전달하는 것 처럼, 하위 컴포넌트에서 단순히 데이터를 슬롯에 전달하면 됩니다.
+        Vue.component('child', {
+          template : '<div class="child"><slot text="hello from child"></slot></div>'
+        })
+
+        // 2.5.0+ 버전에서는 'slot-scope'를 template 뿐만 아니라 컴포넌트, 엘리먼트에서도 사용가능
         new Vue({
             el : '#example5'
         })
 
-        
+        // =====================================================
+        // 동적 컴포넌트
+        // =====================================================
+        // 같은 마운트 포인트를 사용하고 예약된 '<component>' 엘리먼트를 사용하여 여러 컴포넌트 간에
+        // 동적으로 트랜지션하고  'is' 속성에 동적으로 바인드 할 수 있습니다.
+        new Vue({
+          el : '#example6',
+          data : {
+            currentView : 'posts'
+          },
+          components : {
+            home : {
+                template : '<p>Welcome home!</p>'
+            },
+            posts : {
+              template : '<p>Welcome posts!</p>'
+            },
+            archive : {
+              template : '<p>Welcome archive!</p>'
+            }
+          }
+        })
 
-        // slot-scope
-        // template
-        // <component>, is
+
+
         // keep-alive
+        // 당장 중요하지 않지만 문서로 한번 흙어보자
 
+
+        // =====================================================
+        // 재사용 가능한 컴포넌트 제작하기
+        // =====================================================
+        // Vue 컴포넌트의 API 는 prop, event, slot 의 세부분으로 나뉜다.
+        // - props : 외부 환경이 데이터를 컴포넌트로 전달하도록 허용
+        // - event : 컴포넌트가 외부 환경에서 사이트 이펙트를 발생할 수 있도록 합니다.
+        // - slot : 외부환경에서 추가 컨텐츠가 포함 된 컴포넌트를 작성할 수 있습니다.
+        //
+        // 'v-bind' 와 'v-on' 의 약어를 사용하자
+        // - 'v-bind' : <div :foo=""></div>
+        // - 'v-on' : <button @event=""></button>
 
 
     </script>
