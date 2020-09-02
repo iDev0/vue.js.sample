@@ -30,8 +30,33 @@
             <button-counter v-on:increment="incrementTotal"></button-counter>
             <button-counter v-on:increment="incrementTotal"></button-counter>
         </div>
+        <hr>
         <div id="example4">
             <currency-input v-model="price"></currency-input>
+        </div>
+        <hr>
+        <div id="example5">
+            <div>
+                <h1>나는 자식이 있는 부모다</h1>
+                <my-component>
+                    <p>이것은 원본 내용이다.</p>
+                    <p>이것은 원본 추가 내용이다.</p>
+                </my-component>
+            </div>
+            <hr>
+            <div>
+                <h1>나는 자식이 없는 부모다</h1>
+                <my-component></my-component>
+            </div>
+            <hr>
+            <div>
+                <app-layout>
+                    <h1 slot='header'>페이지 제목</h1>
+                    <p>메인 내용</p>
+                    <p>메인 내용2</p>
+                    <p slot='footer'>연락처 정보</p>
+                </app-layout>
+            </div>
         </div>
     </body>
 
@@ -222,8 +247,6 @@
                 }
 
                 this.$emit('input', Number(formattedValue))
-
-
             }
 
           }
@@ -236,7 +259,43 @@
           }
         })
 
-        // slot
+
+        // ====================================================================
+        // slot 을 사용한 컨텐츠 배포
+        // ====================================================================
+
+        // 하위 컴포넌트에 최소한 하나의 콘텐츠가 포함되어 있지 않으면
+        // 부모 콘텐츠가 삭제됨
+        // 원래 '<slot>' 태그 안에 있는 내용은 대체 콘텐츠 로 간주됨.
+        // 대체 콘텐츠는 하위 범위에서 컴파일되며, 삽입할 내용이 없는 경우 표시됨
+        Vue.component('my-component', {
+            template : '<div><h2>나는 자식이다.</h2><slot>내용이 없네?</slot></div>'
+        })
+
+        // 이름을 가진 slot
+        // '<slot>' 은 특별한 속성인 name 을 가지고 있습니다. 
+        Vue.component('app-layout', {
+            template : `
+            <div class="container">
+            <header>
+                <slot name="header"></slot>
+            </header>
+            <main>
+                <slot></slot>
+            </main>
+            <footer>
+                <slot name="footer"></slot>
+            </footer>
+            </div>
+            `
+        })
+
+        new Vue({
+            el : '#example5'
+        })
+
+        
+
         // slot-scope
         // template
         // <component>, is
