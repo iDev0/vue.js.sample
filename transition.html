@@ -1,0 +1,298 @@
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.14.1/lodash.min.js"></script>
+    <style>
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity .5s;
+        }
+        .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+            opacity: 0;
+        }
+
+        /* 애니메이션 진입 및 진출은 다른 지속 시간 및  */
+        /* 타이밍 기능을 사용할 수 있습니다. */
+        .slide-fade-enter-active {
+            transition: all .3s ease;
+        }
+        .slide-fade-leave-active {
+            transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+        }
+        .slide-fade-enter, .slide-fade-leave-to
+            /* .slide-fade-leave-active below version 2.1.8 */ {
+            transform: translateX(10px);
+            opacity: 0;
+        }
+
+        .bounce-enter-active {
+            animation: bounce-in .5s;
+        }
+        .bounce-leave-active {
+            animation: bounce-in .5s reverse;
+        }
+        @keyframes bounce-in {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .list-item {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .list-enter-active, .list-leave-active {
+            transition: all 1s;
+        }
+        .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .flip-list-move {
+            transition: transform 1s;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="demo">
+        <button v-on:click="show = !show">
+            Toggle
+        </button>
+        <transition name="fade">
+            <p v-if="show">hello</p>
+        </transition>
+    </div>
+
+    <div id="css-transition">
+        <button @click="show = !show">
+            toggle render
+        </button>
+        <transition name="slide-fade">
+            <p v-if="show">hello</p>
+        </transition>
+    </div>
+
+    <div id="css-animation">
+        <button @click="show = !show">
+            toggle show
+        </button>
+        <transition name="bounce" appear>
+            <p v-if="show">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </p>
+        </transition>
+    </div>
+
+
+    <div id="example-3">
+        <button @click="show = !show">
+            Toggle render
+        </button>
+        <transition
+                name="custom-classes-transition"
+                enter-active-class="animated tada"
+                leave-active-class="animated bounceOutRight"
+        >
+            <p v-if="show">hello</p>
+        </transition>
+    </div>
+
+    <div id="example-4">
+        <button @click="show = !show">
+            Toggle
+        </button>
+        <transition
+
+                v-on:before-enter="beforeEnter"
+                v-on:enter="enter"
+                v-on:leave="leave"
+                v-bind:css="false"
+        >
+            <p v-if="show">
+                Demo
+            </p>
+        </transition>
+    </div>
+
+    <div id="example-5">
+        <transition>
+            <ul v-if="items.length > 0">
+                <li v-for="item in items">{{ item.message }}</li>
+            </ul>
+            <p v-else>sorry no data!</p>
+        </transition>
+    </div>
+
+    <div id="list-example">
+        <button @click="add">Add</button>
+        <button @click="remove">Remove</button>
+        <transition-group name="list" tag="p">
+            <span v-for="item in items" :key="item" class="list-item">
+                {{ item }}
+            </span>
+        </transition-group>
+    </div>
+
+    <div id="list-move-example">
+        <button @click="shuffle">Shuffle</button>
+        <transition-group name="flip-list" tag="ul">
+            <li v-for="item in items" :key="item">
+                {{ item }}
+            </li>
+        </transition-group>
+    </div>
+
+</body>
+<script>
+
+    new Vue({
+        el : '#demo',
+        data : {
+          show : true
+        }
+    })
+
+    // CSS 트랜지션
+    new Vue({
+      el : '#css-transition',
+      data : {
+        show : true
+      }
+    })
+
+    // CSS 애니메이션
+    new Vue({
+      el : '#css-animation',
+      data : {
+        show : true
+      }
+    })
+
+    // 사용자 지정 트랜지션 클래스
+    // 원본 클래스명을 오버라이드 하여 사용하면 된다.
+    new Vue({
+      el: '#example-3',
+      data: {
+        show: true
+      }
+    })
+
+    // 명시적 트랜지션 지속 시간
+    // 대부분의 경우 Vue는 트랜지션이 완료를 자동으로 감지할 수 있다.
+    // 기본적으로 Vue는 루트 트랜지션 엘리먼트에서 첫번째 'transitioned' 또는 'animationend' 이벤트를 기다림
+    // 그러나 항상 이상적인것은 아님
+    // 중첩된 내부 엘리먼트가 루트 트랜지션 엘리먼트보다 지연된 트랜지션 또는 더 긴 트랜지션 기간을 갖는 다른 엘리먼트
+    // 와 함께 진행하는 트랜지션 스퀀스를 가질 수 있다.
+
+    // '<transition>' 컴포넌트에 duration 속성을 사용하여 명시적으로 지정 가능
+    // <transition :duration="1000">...</transition>
+    // <transition :duration="{ enter : 500, leave : 800}">...</transition>
+
+    // javscript 훅
+    new Vue({
+      el: '#example-4',
+      data: {
+        show: false
+      },
+      methods: {
+        beforeEnter: function (el) {
+          el.style.opacity = 0
+        },
+        enter: function (el, done) {
+          Velocity(el, { opacity: 1, fontSize: '1.4em' }, { duration: 300 })
+          Velocity(el, { fontSize: '1em' }, { complete: done })
+        },
+        leave: function (el, done) {
+          Velocity(el, { translateX: '15px', rotateZ: '50deg' }, { duration: 600 })
+          Velocity(el, { rotateZ: '100deg' }, { loop: 2 })
+          Velocity(el, {
+            rotateZ: '45deg',
+            translateY: '30px',
+            translateX: '30px',
+            opacity: 0
+          }, { complete: done })
+        }
+      }
+    })
+
+    // 최초 렌더링 시 트랜지션
+    // 초기 랜더시 트랜지션을 적용하고 싶다면 appear 속성을 추가 할 수 있다.
+    // #css-animation 참고
+
+    // 엘리먼트 간 트랜지션
+    // v-if, v-else 를 사용하여 원본 엘리먼트 사이를 트랜지션 할 수 있다.
+    new Vue({
+      el : '#example-5',
+      data : {
+        items : [
+          // 주석 풀고 테스트 해보세요.
+          // { message : 'hello' },
+          // { message : 'world' },
+          // { message : 'vue.js' },
+        ]
+      }
+    })
+
+
+    /**
+     * @title 리스트 트랜지션
+     * v-for 를 사용하여 동시에 렌더링 하고자 하는경우 <transition-group> 사용
+     * 사용하기 전 알아두어야 중요사항
+     *
+     * - <transition> 과 달리 실제요소인 <span> 을 렌더링 함
+     * - <tag> 속성으로 렌더링 된 요소를 변경할 수 있음
+     * - 엘리먼트의 내부 구현은 항상 필요
+     * */
+
+    // 리스트의 진입, 진출 트랜지션
+    new Vue({
+      el : '#list-example',
+      data : {
+        items : [1,2,3,4,5,6,7,8,9],
+        nextNum : 10
+      },
+      methods : {
+        randomIndex : function () {
+          return Math.floor(Math.random() * this.items.length)
+        },
+        add : function () {
+            this.items.splice(this.randomIndex(), 0, this.nextNum++)
+        },
+        remove : function () {
+            this.items.splice(this.randomIndex(), 1)
+        }
+      }
+    })
+
+    /**
+     * @title 리스트 이동 트랜지션
+     * <transition-group> 컴포넌트는 또 다른 속임수를 가지고 있음
+     * 진입과 진출 것 뿐만 아니라 위치의 변경 가능
+     * 'v-move' 클래스를 추가하면 이동이 가능
+     * 다른 클래스와 마찬가지로 접두어는 제공된 name 속성 값과 일치
+     * move-class 속성을 사용하여 수동 지정가능
+     * */
+    new Vue({
+      el : '#list-move-example',
+      data : {
+        items : [1,2,3,4,5,6,7,8,9]
+      },
+      methods : {
+        shuffle : function () {
+            this.items = _.shuffle(this.items)
+        }
+      }
+    })
+
+
+</script>
+</html>
