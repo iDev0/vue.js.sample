@@ -1,0 +1,130 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
+    <body>
+        
+    </body>
+    <script>
+
+        /** 
+            믹스인 (Mixins)
+            믹스인은 Vue컴포넌트에 재사용 가능한 기능을 배포하는 유연한 방법
+            mixin 객체는 모든 구성 요소 옵션을 포함할 수 있다.
+            컴포넌트에 mixin 을 사용하면 해당 mixin 의 모든 옵션이 컴포넌트의 고유 옵션에 '혼합' 된다?
+
+            -> 공통으로 쓸수 있는 함수들을 믹스인이란 기능을 이용하여 분리 시켜주는것 같다.
+
+            @title 옵션병합
+            mixin 과 컴포넌트 자체에 중첩 옵션이 포함되어 있는 경우 '병합' 됩니다. 
+            즉, mixin 의 변수 또는 함수명이 컴포넌트의 변수 또는 함수명과 같은 경우 컴포넌트가 우선순위가 된다.
+
+
+        */
+        
+        // 믹스인 객체 생성
+        var myMixin = {
+            created : function () {
+                this.hello()
+            },
+            methods : {
+                hello : function () {
+                    console.log('hello from mixin!')
+                }
+            }
+        }
+
+
+        // mixin 을 사용할 컴포넌트 정의
+        var mixinComponent = Vue.extend({
+            mixins: [myMixin]
+        })
+
+        // created 가 발생시 hello 메소드가 호출하기 때문에 'hello from mixin' 이 찍힌다.
+        var component = new mixinComponent()
+
+        // 옵션병합 예시
+
+        // 같은 이름의 훅 함수는 배열에 병합되어 모든 함수가 호출 (병합 X)
+        // mixin 훅은 컴포넌트 자체의 훅 '이전에' 호출 (병합 X)
+
+        // 'methods', 'components', 'directives' 와 같은 객체 값을 요구하는 옵션은 같은 객체에 병합
+        // 중복되는 경우 무조건 컴포넌트 옵션이 우선순위
+
+        var mixin = {
+            data : function () {
+                return {
+                    message : 'hello', 
+                    foo : 'bar'
+                }
+            },
+            created : function () {
+                console.log('created mixin...')
+            },
+            methods : {
+                test : function () {
+                    console.log('foo')
+                },
+                conflicting : function () {
+                    console.log('from mixin')
+                }
+            }
+        
+        }
+
+        var vm = new Vue({
+            mixins : [mixin],
+            data : function () {
+                return {
+                    message : 'say hello',
+                    bar : 'foo'
+                }
+            },
+            created : function () {
+                // {message : 'say hello', foo : 'bar', bar : 'foo'}
+                console.log(this.$data)         
+                console.log('created component...')        
+            },
+            methods : {
+                test2 : function () {
+                    console.log('bar')
+                },
+                conflicting : function () {
+                    console.log('from self')
+                }
+            }
+        })
+
+        vm.test()
+        vm.test2()
+        vm.conflicting()
+
+        // 전역 Mixin 
+        // 믹스인을 전역으로 사용할 수 있다.
+        // 단, 믹스인을 전역으로 적용하면 이 후 생성된 모든 Vue인스턴스에 영향이 가니 주의해야한다.
+        // 적절히 사용하면 사용자 정의 옵션에 대한 처리 로직을 주입하는데 사용할 수 있다.
+
+        Vue.mixin({
+            created : function () {
+                // 사용자 정의 옵션을 위한 핸들러 주입
+                var myOption = this.$options.myOption                
+                if (myOption) {
+                    console.log(myOption)                
+                }
+            }
+        })
+
+        new Vue({
+            myOption : 'hello!'
+        })
+
+        // 사용자 정의 옵션 병합 전략
+        // 사용자 지정 옵션을 병합할 때 기본 옵션을 사용하면 기존 값을 덮어씀
+        // 커스텀 로직을 사용해 커스텀 옵션을 병합하려면 
+        // 'Vue.config.optionMergeStrategies' 에 함수를 추가할 필요가 있다.
+        Vue.confing.optionMergeStrategies.myOption = function (toValue, fromValue) {
+            // return 병합된 값
+        }
+
+    </script>
+</html>
