@@ -6,7 +6,7 @@
         <div id='example'>
             <p>원본 메시지: "{{ message }}"</p>
             <p>역순으로 표시한 메시지: "{{ reversedMessage }}"</p>
-            <p>computed now (캐싱처리됨) : {{now}}</p>
+            <p>computed now (캐싱처리됨) : {{ now }}</p>
         </div>
         <hr>
         <div id='userNameUsingWatch'>
@@ -44,7 +44,7 @@
                 now : function () {
                     return Date.now()
                 }
-            }
+            },
         })
 
 

@@ -14,6 +14,7 @@
         </div>
         <div id="example3">
             <child message="안녕하세요"></child>
+            <check-props seq='1'></check-props>
             <br>
             <div>
                 <input v-model="parentMsg">
@@ -86,6 +87,15 @@
          * 
         */
         
+        /**
+         * 
+         * <custom-header></custom-header>
+         * <custom-body></custom-body>
+         * <custom-footer></custom
+         * 
+        */
+
+
 
         // ==== 컴포넌트 사용하기 ====
         // 전역등록
@@ -137,6 +147,9 @@
         
         new Vue({
             el : '#example2',
+            data : {
+                counter : 1
+            }
         })
 
         // ======= Props ==========
@@ -186,7 +199,10 @@
         // Props 검증 예
         Vue.component('check-props', {
             props : {
-                text : String,
+                text : {
+                    type : String,
+                    default : '안녕하세요.'
+                },
                 vaildation : {
                     type : Function,
                     default : function () {
@@ -198,7 +214,9 @@
                     default : 0,
                     required : true
                 }
-            }
+            },
+            template : '<div>{{text}}</div>'
+    
         })
 
         new Vue({

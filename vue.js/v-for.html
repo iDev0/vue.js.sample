@@ -5,8 +5,8 @@
     <body>
         <div>
             <ul id='example'>
-                <li v-for='item in items'>
-                    {{ item.message }}
+                <li v-for='msg in items'>
+                    {{ msg.message }}
                 </li>
             </ul>
         </div>   
@@ -151,6 +151,9 @@
                 addItem : function () {
                     // this.items[2] = 'VUE.JS' // X
                     this.items.push({ id : 2, message : 'VUE.JS'})
+                    // this.items[1] = {id : 2, message : '1111'}                    
+                    // Vue.set()
+                    console.log(this.items)
                 },
                 even : function (numbers) {
                     // computed 속성을 쓸수 없는 경우 

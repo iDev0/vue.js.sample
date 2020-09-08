@@ -11,18 +11,23 @@
         // 주요 개념 : 데이터의 객체는 인스턴스가 생성될 때 존재 한 속성들만 반응형이 가능하다.
         
         var data = { a: 1 }
-
+                
         // Vue인스턴스에 데이터 객체를 추가합니다.
+        // 메모리에 데이터를 올리는건데
         var vm = new Vue({
-            data: data
+            data: data,
         })
+
+
+
+        // 내가 data 에 있는 데이터를 수정했을때 바로 변경이 된다.
+
 
         // 인스턴스에 있는 속성은
         // 원본 데이터에 있는 값을 반환합니다.
         console.log(vm.a === data.a); // => true
 
-        // 인스턴스에 있는 속성값을 변경하면
-        // 원본 데이터에도 영향을 미칩니다.
+        // 인스턴스에 있는 속성값을 변경하면 원본 데이터에도 영향을 미칩니다.
         vm.a = 2
         console.log(data.a) // => 2
 
@@ -31,9 +36,13 @@
         console.log(vm.a) // => 3
 
         // 매우 중요 : 인스턴스 생성될 때 존재한 것만 반응형이 가능!!!!!!!!!!!!!!!!!!!!!!!!!
-        vm.b = 5
-        console.log(vm.b)   // 5
-        console.log(data.b) // undefined       
+        // vm.b = 5
+        // console.log(vm.b)   // 5
+        // console.log(data.b) // undefined 
+        
+        data.b = 6
+        console.log(vm.b)   // undefined
+        console.log(data.b) // 6
         
         // 반응형을 막고 싶은 경우
         // Object.freeze(객체명)
