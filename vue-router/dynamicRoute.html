@@ -7,8 +7,9 @@
     <!-- 네비게이션을 위해 router-link 컴포넌트를 사용합니다. -->
     <!-- 구체적인 속성은 `to` prop을 이용합니다. -->
     <!-- 기본적으로 `<router-link>`는 `<a>` 태그로 렌더링됩니다.-->
-    <router-link to="/foo/9102">Go to Foo</router-link>
-    <router-link to="/bar/999">Go to Bar</router-link>
+    <router-link to="/foo/9102">Go to Foo id 9102</router-link>
+    <router-link to="/foo/999">Go to Foo id 999</router-link>
+    <router-link to="/bar/999">Go to Bar id 999</router-link>
   </p>
   <!-- 라우트 아울렛 -->
   <!-- 현재 라우트에 맞는 컴포넌트가 렌더링됩니다. -->
@@ -16,7 +17,27 @@
 </div>
 <script>
 
-    const Foo = { template : '<div>Foo Id is {{ $route.params.id }} </div>'}
+    const Foo = { 
+        template : '<div>Foo Id is {{ $route.params.id }} </div>',
+        watch : {
+            '$route' (to, from) {
+                // Params 변경 사항에 반응하기 
+                // 2.2 버전 전에는 route 인식
+                console.log(to)
+                console.log('======')
+                console.log(from)
+            }
+        },
+        beforeRouteUpdate (to, from, next) {
+            // Params 변경 사항에 반응하기
+            // 2.2 버전 이후의 route 인식
+            console.log(to)
+            console.log('=====================')
+            console.log(from)
+            console.log('=====================')
+            next()
+        }
+    }
     const Bar = { template : '<div>Bar Id is {{ $route.params.id }} </div>'}
 
     const routes = [
